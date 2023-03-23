@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { FaPen, FaSave, FaTimes } from 'react-icons/fa';
+import { deleteGoal, updateGoal } from "../features/goalSlice";
 import ProgressBar from "./ProgressBar";
 
-const Goal = ({ goal, onDelete, onEdit }: any) => {
+const Goal = ({ goal, dispatch }: any) => {
   const initialHour = goal.initialHour;
   const priority = goal.priority;
 
@@ -25,7 +26,7 @@ const Goal = ({ goal, onDelete, onEdit }: any) => {
         <h3 className="font-semibold text-zinc-800">{goal.goalText}</h3>
         <FaTimes
           className="text-rose-600 cursor-pointer"
-          onClick={() => onDelete(goal.id)}
+          onClick={dispatch(deleteGoal())}
         />
       </div>
       <div className="flex flex-row justify-between ">
@@ -41,7 +42,7 @@ const Goal = ({ goal, onDelete, onEdit }: any) => {
               />
               <FaSave
                 className="relative left-52 bottom-7 text-indigo-800"
-                onClick={() => { onEdit(goal.id, hours) && hideEdit() }}
+                onClick={dispatch(updateGoal()) && hideEdit()}
               />
             </div>
         }
