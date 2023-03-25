@@ -1,7 +1,8 @@
-import { FaTimes, FaPlus } from 'react-icons/fa';
+import { FaPlus, FaTimes } from 'react-icons/fa';
+import { HeaderProps } from '../models/Models';
 import Button from "./Button";
 
-const Header = ({ onToggle, hide }: any) => {
+const Header = ({ onToggle, hide }: HeaderProps) => {
   return (
     <header className="container flex justify-between mx-auto">
       <h3 className="font-bold text-indigo-500 text-center text-2xl">Goal Tracker</h3>

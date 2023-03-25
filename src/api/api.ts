@@ -1,48 +1,31 @@
+import axios from "axios";
+import { Goal } from "../models/Models";
+
 const BASE_URL = "http://localhost:3000/goals";
 
-export async function getData(id: number) {
-  const response = await fetch(`${BASE_URL}/${id}`);
-  const data = await response.json();
-  return data;
-}
+export const getGoals = () => axios.get(BASE_URL).then((response) => response.data)
 
-export async function fecthFromJson() {
-  const response = await fetch(BASE_URL);
-  const data = await response.json();
-  return data;
-}
+export const getData = (id: string) => axios.get<Goal>(`${BASE_URL}/${id}`).then((response) => response.data)
 
-//Function for adding goals
-export async function addGoal(goal: any) {
-  const response = await fetch(BASE_URL, {
-    method: 'POST',
+export const removeGoal = (id: string) => axios.delete(`${BASE_URL}/${id}`)
+
+export const addGoal = (goal: Goal) => axios.post<Goal>(BASE_URL, {
+  headers: {
+    'Content-type': 'application/json',
+    Accept: 'application/json',
+  },
+  body: JSON.stringify(goal),
+}).then((response) => response.data)
+
+export const updateHour = async (id: string, hour: number): Promise<Goal> => {
+  const oldGoal = await getData(id);
+  const updatedGoal = { ...oldGoal, hours: hour };
+  const response = await axios.put(BASE_URL, {
     headers: {
       'Content-type': 'application/json',
+      Accept: 'application/json',
     },
-    body: JSON.stringify(goal)
-  });
-  const data = await response.json();
-  return data;
-}
-
-//Function for deleting goals
-export async function deleteGoal(id: number) {
-  await fetch(`${BASE_URL}/${id}`, {
-    method: 'DELETE',
-  });
-}
-//Function for updating the hour
-export async function updateHour(id: number, hour: number) {
-  const oldHour = await getData(id);
-  const updatedHour = { ...oldHour, hours: hour };
-
-  const response = await fetch(`${BASE_URL}/${id}`, {
-    method: 'PUT',
-    headers: {
-      'Content-type': 'application/json',
-    },
-    body: JSON.stringify(updatedHour),
-  });
-  const data = await response.json();
-  return data;
+    body: JSON.stringify(updatedGoal),
+  })
+  return response.data as Goal
 }

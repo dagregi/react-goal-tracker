@@ -1,5 +1,6 @@
+import { ProgressBarProps } from "../models/Models";
 
-const ProgressBar = ({ progress }: any) => {
+const ProgressBar = ({ progress }: ProgressBarProps) => {
   const percentile = Math.round(100 - progress);
 
   return (

@@ -1,15 +1,17 @@
-import { useState } from "react"
+import { nanoid } from "@reduxjs/toolkit";
+import { ChangeEvent, useState } from "react";
 import { createGoal } from "../features/goalSlice";
+import { AddGoalProps } from "../models/Models";
 
-const AddGoal = ({ dispatch }: any) => {
+const AddGoal = ({ dispatch }: AddGoalProps) => {
   const [goalText, setGoalText] = useState("");
-  const [hours, setHours] = useState(1);
+  const [hours, setHours] = useState("");
   const [priority, setPriority] = useState("low");
   const [error, setError] = useState("");
 
-  const handleNameChange = (e: any) => { setGoalText(e.target.value) }
-  const handleHourChange = (e: any) => { setHours(Number(e.target.value)) }
-  const handlePriorityChange = (e: any) => { setPriority(e.target.value) }
+  const handleNameChange = (e: ChangeEvent<HTMLInputElement>) => { setGoalText(e.target.value) }
+  const handleHourChange = (e: ChangeEvent<HTMLInputElement>) => { setHours((e.target.value)) }
+  const handlePriorityChange = (e: ChangeEvent<HTMLSelectElement>) => { setPriority(e.target.value) }
 
   const errorMsg = <p className="mt-1 shadow rounded bg-red-500 bg-opacity-75 text-center text-white transition font-semibold">{error}</p>
 
@@ -19,10 +21,17 @@ const AddGoal = ({ dispatch }: any) => {
     if (!goalText || !hours) {
       setError("Can't have an empty input!");
     } else {
-      dispatch(createGoal)
+      const numberHour = Number(hours)
+      dispatch(createGoal({
+        id: nanoid(3),
+        goalText,
+        hours: numberHour,
+        initialHour: numberHour,
+        priority,
+      }))
 
       setGoalText("");
-      setHours(1);
+      setHours("");
       setPriority("low");
     }
   }
