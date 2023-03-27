@@ -9,7 +9,7 @@ const Home = ({ goals, dispatch }: GoalsProp) => {
   return (
     <>
       {
-        status === "fullfied" ? (
+        status === "fullfied" || status === "" ? (
           goals.length > 0 ? (
             goals.map((goal) => (
               <Goal key={goal.id} goal={goal} dispatch={dispatch} />
