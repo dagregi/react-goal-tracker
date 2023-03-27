@@ -1,9 +1,17 @@
-import { nanoid } from "@reduxjs/toolkit";
+import { nanoid } from "nanoid";
 import { ChangeEvent, useState } from "react";
-import { createGoal } from "../features/goalSlice";
-import { AddGoalProps } from "../models/Models";
+import { useMutation, useQueryClient } from "react-query";
+import { addGoal } from "../api/goalApi";
 
-const AddGoal = ({ dispatch }: AddGoalProps) => {
+const AddGoal = () => {
+  const queryClient = useQueryClient()
+
+  const addGoalMutation = useMutation(addGoal, {
+    onSuccess: () => {
+      queryClient.invalidateQueries("goals")
+    }
+  })
+
   const [goalText, setGoalText] = useState("");
   const [hours, setHours] = useState("");
   const [priority, setPriority] = useState("low");
@@ -22,13 +30,13 @@ const AddGoal = ({ dispatch }: AddGoalProps) => {
       setError("Can't have an empty input!");
     } else {
       const numberHour = Number(hours)
-      dispatch(createGoal({
-        id: nanoid(3),
+      addGoalMutation.mutate({
+        id: nanoid(5),
         goalText,
         hours: numberHour,
         initialHour: numberHour,
-        priority,
-      }))
+        priority
+      })
 
       setGoalText("");
       setHours("");

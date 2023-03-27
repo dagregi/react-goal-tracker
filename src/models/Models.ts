@@ -1,5 +1,4 @@
 import { ReactElement } from "react"
-import { AppDispatch } from "../app/store"
 
 export type Goal = {
   "id": string,
@@ -9,28 +8,13 @@ export type Goal = {
   "priority": string,
 }
 
-export type AllGoals = {
-  goals: Goal[]
-}
-
-export type GoalState = {
-  goals: Goal[]
-  status: "" | "fullfied" | "pending" | "rejected"
-  error: string | undefined | null
-}
-
-export type AddGoalProps = {
-  dispatch: AppDispatch
-}
-
 export type GoalProps = {
   goal: Goal
-  dispatch: AppDispatch
 }
 
 export type GoalsProp = {
   goals: Goal[]
-  dispatch: AppDispatch
+  status: "idle" | "loading" | "error" | "success"
 }
 
 export type ButtonProps = {
