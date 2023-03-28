@@ -1,13 +1,28 @@
 import { useState } from "react";
 import { FaPen, FaSave, FaTimes } from 'react-icons/fa';
-import { deleteGoal, updateGoal } from "../features/goalSlice";
+import { useMutation, useQueryClient } from "react-query";
+import { removeGoal, updateGoal } from "../api/goalApi";
 import { GoalProps } from "../models/Models";
 import ProgressBar from "./ProgressBar";
 
-const Goal = ({ goal, dispatch }: GoalProps) => {
+const Goal = ({ goal }: GoalProps) => {
+  const queryClient = useQueryClient()
+
+  const removeGoalMutation = useMutation(removeGoal, {
+    onSuccess: () => {
+      queryClient.invalidateQueries("goals")
+    }
+  })
+  const updateGoalMutation = useMutation({
+    mutationFn: ({ id, hours }) => updateGoal(id, hours),
+    onSuccess: () => {
+      queryClient.invalidateQueries("goals")
+    }
+  })
+
   const initialHour = goal.initialHour;
   const priority = goal.priority;
-  const id = goal.id;
+  const id = goal.id
 
   const [toggle, setToggle] = useState(true);
   const [hours, setHours] = useState(goal.hours);
@@ -28,7 +43,7 @@ const Goal = ({ goal, dispatch }: GoalProps) => {
         <h3 className="font-semibold text-zinc-800">{goal.goalText}</h3>
         <FaTimes
           className="text-rose-600 cursor-pointer"
-          onClick={() => dispatch(deleteGoal(goal.id))}
+          onClick={() => removeGoalMutation.mutate(id)}
         />
       </div>
       <div className="flex flex-row justify-between ">
@@ -44,7 +59,7 @@ const Goal = ({ goal, dispatch }: GoalProps) => {
               />
               <FaSave
                 className="relative left-52 bottom-7 text-indigo-800"
-                onClick={() => { dispatch(updateGoal({ id, hours })).unwrap() && hideEdit() }}
+                onClick={() => { { updateGoalMutation.mutate({ id, hours }) } { hideEdit() } }}
               />
             </div>
         }
